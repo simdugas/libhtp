@@ -1166,9 +1166,17 @@ htp_status_t htp_connp_RES_FINALIZE(htp_connp_t *connp) {
     }
 
     if (htp_treat_response_line_as_body(data, bytes_left)) {
-        // Interpret remaining bytes as body data
-        htp_log(connp, HTP_LOG_MARK, HTP_LOG_WARNING, 0, "Unexpected response body");
-        htp_status_t rc = htp_tx_res_process_body_data_ex(connp->out_tx, data, bytes_left);
+        // Interpret remaining bytes as body data only if inbound processing
+        // was not suspended. Otherwise, yield back to inbound processing in
+        // case we've suspended because of a CONNECT transaction and are about
+        // to enter a tunneled state where we won't process body data.
+        htp_status_t rc = HTP_OK;
+
+        if (connp->in_status != HTP_STREAM_DATA_OTHER) {
+            htp_log(connp, HTP_LOG_MARK, HTP_LOG_WARNING, 0, "Unexpected response body");
+            rc = htp_tx_res_process_body_data_ex(connp->out_tx, data, bytes_left);
+        }
+
         htp_connp_res_clear_buffer(connp);
         return rc;
     }

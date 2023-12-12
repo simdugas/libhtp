@@ -2097,6 +2097,7 @@ char *htp_connp_in_state_as_string(htp_connp_t *connp) {
     if (connp->in_state == htp_connp_REQ_HEADERS) return "REQ_HEADERS";
     if (connp->in_state == htp_connp_REQ_CONNECT_CHECK) return "REQ_CONNECT_CHECK";
     if (connp->in_state == htp_connp_REQ_CONNECT_WAIT_RESPONSE) return "REQ_CONNECT_WAIT_RESPONSE";
+    if (connp->in_state == htp_connp_REQ_CONNECT_PROBE_DATA) return "REQ_CONNECT_PROBE_DATA";
     if (connp->in_state == htp_connp_REQ_BODY_DETERMINE) return "REQ_BODY_DETERMINE";
     if (connp->in_state == htp_connp_REQ_BODY_IDENTITY) return "REQ_BODY_IDENTITY";
     if (connp->in_state == htp_connp_REQ_BODY_CHUNKED_LENGTH) return "REQ_BODY_CHUNKED_LENGTH";

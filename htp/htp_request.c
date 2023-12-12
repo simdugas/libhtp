@@ -364,6 +364,9 @@ htp_status_t htp_connp_REQ_CONNECT_PROBE_DATA(htp_connp_t *connp) {
 #endif
         connp->in_status = HTP_STREAM_TUNNEL;
         connp->out_status = HTP_STREAM_TUNNEL;
+
+        // set the final state to eventually complete the transaction
+        connp->in_state = htp_connp_REQ_FINALIZE;
     }
 
     // not calling htp_connp_req_clear_buffer, we're not consuming the data
