@@ -2145,4 +2145,33 @@ TEST_F(ConnectionParsing, ResponseBodyData) {
 
     delete user_data;
 }
+
+TEST_F(ConnectionParsing, ConnectTunnel) {
+    htp_config_register_response_body_data(cfg, callback_RESPONSE_BODY_DATA);
+
+    int rc = test_run(home, "101-connect-tunnel.t", cfg, &connp);
+    ASSERT_GE(rc, 0);
+
+    ASSERT_EQ(1, htp_list_size(connp->conn->transactions));
+
+    htp_tx_t *tx = (htp_tx_t *) htp_list_get(connp->conn->transactions, 0);
+    ASSERT_TRUE(tx != NULL);
+
+    EXPECT_TRUE(htp_tx_is_complete(tx));
+
+    EXPECT_EQ(0, bstr_cmp_c(tx->request_method, "CONNECT"));
+
+    EXPECT_EQ(200, tx->response_status_number);
+    EXPECT_EQ(0, tx->request_entity_len);
+    EXPECT_EQ(0, tx->request_message_len);
+    EXPECT_EQ(-1, tx->request_content_length);
+    EXPECT_EQ(0, tx->response_entity_len);
+    EXPECT_EQ(0, tx->response_message_len);
+    EXPECT_EQ(-1, tx->response_content_length);
+
+    struct ResponseBodyDataCallback *user_data = (struct ResponseBodyDataCallback *) htp_tx_get_user_data(tx);
+    ASSERT_TRUE(user_data);
+    ASSERT_EQ(0, user_data->data.size());
+}
+
 #endif
