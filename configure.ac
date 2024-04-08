@@ -3,7 +3,7 @@ dnl ----------------------
 dnl Initialization macros
 dnl ----------------------
 
-AC_INIT([LibHTP], m4_esyscmd([./get-version.sh VERSION]))
+AC_INIT([LibHTP],[m4_esyscmd(./get-version.sh VERSION)])
 AM_INIT_AUTOMAKE()
 
 AC_CONFIG_HEADERS([htp_config_auto_gen.h])
@@ -86,7 +86,7 @@ dnl -----------------------------------------------
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
-AM_PROG_LIBTOOL
+LT_INIT
 AM_SANITY_CHECK
 
 # Checks for library functions
@@ -99,7 +99,7 @@ AM_SANITY_CHECK
 dnl -----------------------------------------------
 dnl Checks for libs.
 dnl -----------------------------------------------
-AC_CHECK_HEADER(zlib.h,,[AC_ERROR(zlib.h not found ...)])
+AC_CHECK_HEADER(zlib.h,,[AC_MSG_ERROR(zlib.h not found ...)])
 ZLIB=""
 AC_CHECK_LIB(z, inflate,, ZLIB="no")
 if test "$ZLIB" = "no"; then
@@ -161,13 +161,11 @@ AC_MSG_CHECKING(for iconvctl)
 TMPLIBS="${LIBS}"
 LIBS="${LIBS} ${LIBICONV}"
 
-AC_TRY_LINK([#include <stdlib.h>
-             #include <iconv.h>],
-            [int iconv_param = 0;
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>
+             #include <iconv.h>]], [[int iconv_param = 0;
              iconv_t cd = iconv_open("","");
              iconvctl(cd, ICONV_SET_DISCARD_ILSEQ, &iconv_param);
-             iconv_close(cd);],
-            [ac_cv_func_iconvctl=yes])
+             iconv_close(cd);]])],[ac_cv_func_iconvctl=yes],[])
 AC_MSG_RESULT($ac_cv_func_iconvctl)
 if test "$ac_cv_func_iconvctl" == yes; then
     AC_DEFINE(HAVE_ICONVCTL,1,"Define to 1 if you have the `iconvctl' function.")
@@ -185,7 +183,7 @@ dnl -----------------------------------------------
 AC_MSG_CHECKING(for gcc support of -Wstrict-overflow=1)
 TMPCFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -Wstrict-overflow=1"
-AC_TRY_COMPILE(,,[gcc_have_strict_overflow=yes],[gcc_have_strict_overflow=no])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[gcc_have_strict_overflow=yes],[gcc_have_strict_overflow=no])
 AC_MSG_RESULT($gcc_have_strict_overflow)
 if test "$gcc_have_strict_overflow" != "yes"; then
     CFLAGS="${TMPCFLAGS}"
@@ -198,7 +196,7 @@ dnl -----------------------------------------------
 AC_MSG_CHECKING(for gcc support of stack smashing protection)
 TMPCFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -fstack-protector"
-AC_TRY_COMPILE(,,[gcc_have_fstack_protector=yes],[gcc_have_fstack_protector=no])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[gcc_have_fstack_protector=yes],[gcc_have_fstack_protector=no])
 AC_MSG_RESULT($gcc_have_fstack_protector)
 if test "$gcc_have_fstack_protector" != "yes"; then
     CFLAGS="${TMPCFLAGS}"  
@@ -211,7 +209,7 @@ dnl -----------------------------------------------
 AC_MSG_CHECKING(for gcc support of FORTIFY_SOURCE)
 TMPCFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -D_FORTIFY_SOURCE=2"
-AC_TRY_COMPILE(,,[gcc_have_fortify_source=yes],[gcc_have_fortify_source=no])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[gcc_have_fortify_source=yes],[gcc_have_fortify_source=no])
 AC_MSG_RESULT($gcc_have_fortify_source)
 if test "$gcc_have_fortify_source" != "yes"; then
     CFLAGS="${TMPCFLAGS}"
@@ -223,7 +221,7 @@ dnl -----------------------------------------------
 AC_MSG_CHECKING(for gcc support of -Wformat -Wformat-security)
 TMPCFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -Wformat -Wformat-security"
-AC_TRY_COMPILE(,,[gcc_have_format_security=yes],[gcc_have_format_security=no])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[gcc_have_format_security=yes],[gcc_have_format_security=no])
 AC_MSG_RESULT($gcc_have_format_security)
 if test "$gcc_have_format_security" != "yes"; then
     CFLAGS="${TMPCFLAGS}"
@@ -232,7 +230,7 @@ fi
 AC_MSG_CHECKING(for gcc support of -fPIC)
 TMPCFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -fPIC"
-AC_TRY_COMPILE(,,[gcc_have_fpic=yes],[gcc_have_fpic=no])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[gcc_have_fpic=yes],[gcc_have_fpic=no])
 AC_MSG_RESULT($gcc_have_fpic)
 if test "$gcc_have_fpic" != "yes"; then
     CFLAGS="${TMPCFLAGS}"
@@ -266,10 +264,11 @@ dnl Generates Makefiles, configuration files and scripts
 dnl -----------------------------------------------
 
 AC_PREFIX_DEFAULT(/usr/local)
-AC_OUTPUT(Makefile \
+AC_CONFIG_FILES([Makefile \
           htp.pc \
           htp/Makefile \
           htp/lzma/Makefile \
           test/Makefile \
           docs/Makefile
-)
+])
+AC_OUTPUT
