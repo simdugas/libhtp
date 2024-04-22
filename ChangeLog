@@ -1,3 +1,10 @@
+0.5.48 (22 April 2024)
+----------------------
+
+- decompressor: only take erroneous data on first try
+
+- autotools: run autoupdate to modernize build system
+
 0.5.47 (19 March 2024)
 ----------------------
 
