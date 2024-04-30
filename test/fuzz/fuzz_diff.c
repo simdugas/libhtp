@@ -350,7 +350,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         htp_header_t *h = (htp_header_t *) htp_table_get_index(ctx->request_headers, i, NULL);
         void *rsh = htp_tx_request_header_index(rstx, (size_t) i);
         if (bstrDiff(htp_header_name(rsh), h->name, "header-name")) {
-            printf("request header %d is different\n", i);
+            printf("request header name %d is different\n", i);
             fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
@@ -358,7 +358,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
             return 1;
         }
         if (bstrDiff(htp_header_value(rsh), h->value, "header-value")) {
-            printf("request header %d is different\n", i);
+            printf("request header value %d is different\n", i);
             fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
@@ -382,7 +382,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         htp_header_t *h = (htp_header_t *) htp_table_get_index(ctx->response_headers, i, NULL);
         void *rsh = htp_tx_response_header_index(rstx, (size_t) i);
         if (bstrDiff(htp_header_name(rsh), h->name, "header-name")) {
-            printf("response header %d is different\n", i);
+            printf("response header name %d is different\n", i);
             fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
@@ -390,7 +390,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
             return 1;
         }
         if (bstrDiff(htp_header_value(rsh), h->value, "header-value")) {
-            printf("response header %d is different\n", i);
+            printf("response header value %d is different\n", i);
             fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
