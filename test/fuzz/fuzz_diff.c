@@ -339,6 +339,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
     uint32_t rsnbh = htp_tx_request_headers_size(rstx);
     if (rsnbh != nbhc) {
         printf("Assertion failure: got nbheaders c=%d versus rust=%d\n", nbhc, rsnbh);
+        fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         abort();
 #endif
@@ -350,6 +351,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         void *rsh = htp_tx_request_header_index(rstx, (size_t) i);
         if (bstrDiff(htp_header_name(rsh), h->name, "header-name")) {
             printf("request header %d is different\n", i);
+            fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
 #endif
@@ -357,6 +359,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         }
         if (bstrDiff(htp_header_value(rsh), h->value, "header-value")) {
             printf("request header %d is different\n", i);
+            fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
 #endif
@@ -368,6 +371,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
     rsnbh = htp_tx_response_headers_size(rstx);
     if (rsnbh != nbhc) {
         printf("Assertion failure: got nbheaders c=%d versus rust=%d\n", nbhc, rsnbh);
+        fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         abort();
 #endif
@@ -379,6 +383,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         void *rsh = htp_tx_response_header_index(rstx, (size_t) i);
         if (bstrDiff(htp_header_name(rsh), h->name, "header-name")) {
             printf("response header %d is different\n", i);
+            fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
 #endif
@@ -386,6 +391,7 @@ static int txDiff(void* rstx, htp_tx_t * ctx) {
         }
         if (bstrDiff(htp_header_value(rsh), h->value, "header-value")) {
             printf("response header %d is different\n", i);
+            fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
             abort();
 #endif
@@ -401,6 +407,7 @@ static int connDiff(void* rsconnp, htp_conn_t * conn) {
     uint32_t c = htp_list_size(conn->transactions);
     if (rs != c) {
         printf("Assertion failure: got nbtx c=%d versus rust=%d\n", c, rs);
+        fflush(stdout);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         abort();
 #endif
