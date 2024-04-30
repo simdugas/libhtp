@@ -172,7 +172,12 @@ htp_status_t htp_parse_request_header_generic(htp_connp_t *connp, htp_header_t *
         h->name = bstr_dup_c("");
         if (h->name == NULL) return HTP_ERROR;
 
-        h->value = bstr_dup_mem(data, len);
+        // Ignore LWS after field-content.
+        value_end = len - 1;
+        while ((value_end > 0) && (htp_is_lws(data[value_end]))) {
+            value_end--;
+        }
+        h->value = bstr_dup_mem(data, value_end + 1);
         if (h->value == NULL) {
             bstr_free(h->name);
             return HTP_ERROR;
