@@ -159,6 +159,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     htp_config_register_response_start(cfg, HTPCallbackResponseStart);
     htp_config_register_response_complete(cfg, HTPCallbackResponse);
     htp_config_register_request_line(cfg, HTPCallbackRequestLine);
+    htp_config_set_max_tx(cfg, 512);
 
     connp = htp_connp_create(cfg);
     htp_connp_set_user_data(connp, (void *) 0x02);
