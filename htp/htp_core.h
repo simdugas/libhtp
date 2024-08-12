@@ -235,6 +235,7 @@ enum htp_file_source_t {
 #define HTP_REQUEST_INVALID                0x100000000ULL
 #define HTP_REQUEST_INVALID_C_L            0x200000000ULL
 #define HTP_AUTH_INVALID                   0x400000000ULL
+#define HTP_HEADERS_TOO_MANY               0x800000000ULL
 
 #define HTP_MAX_HEADERS_REPETITIONS 64
 

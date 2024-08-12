@@ -467,6 +467,14 @@ void htp_config_set_compression_time_limit(htp_cfg_t *cfg, size_t useclimit);
 void htp_config_set_max_tx(htp_cfg_t *cfg, uint32_t limit);
 
 /**
+ * Configures the maximum number of headers LibHTP will accept per request or response.
+ *
+ * @param[in] cfg
+ * @param[in] limit
+ */
+void htp_config_set_number_headers_limit(htp_cfg_t *cfg, uint32_t limit);
+
+/**
  * Configures the desired log level.
  * 
  * @param[in] cfg

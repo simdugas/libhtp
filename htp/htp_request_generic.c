@@ -120,6 +120,17 @@ htp_status_t htp_process_request_header_generic(htp_connp_t *connp, unsigned cha
         bstr_free(h->value);
         free(h);
     } else {
+        if (htp_table_size(connp->in_tx->request_headers) > connp->cfg->number_headers_limit) {
+            if (!(connp->in_tx->flags & HTP_HEADERS_TOO_MANY)) {
+                connp->in_tx->flags |= HTP_HEADERS_TOO_MANY;
+                htp_log(connp, HTP_LOG_MARK, HTP_LOG_WARNING, 0, "Too many request headers");
+            }
+            bstr_free(h->name);
+            bstr_free(h->value);
+            free(h);
+            // give up on what comes next
+            return HTP_ERROR;
+        }
         // Add as a new header.
         if (htp_table_add(connp->in_tx->request_headers, h->name, h) != HTP_OK) {
             bstr_free(h->name);

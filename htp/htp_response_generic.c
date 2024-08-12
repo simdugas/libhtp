@@ -321,6 +321,16 @@ htp_status_t htp_process_response_header_generic(htp_connp_t *connp, unsigned ch
         bstr_free(h->value);
         free(h);       
     } else {
+        if (htp_table_size(connp->out_tx->response_headers) > connp->cfg->number_headers_limit) {
+            if (!(connp->out_tx->flags & HTP_HEADERS_TOO_MANY)) {
+                connp->out_tx->flags |= HTP_HEADERS_TOO_MANY;
+                htp_log(connp, HTP_LOG_MARK, HTP_LOG_WARNING, 0, "Too many response headers");
+            }
+            bstr_free(h->name);
+            bstr_free(h->value);
+            free(h);
+            return HTP_ERROR;
+        }
         // Add as a new header.
         if (htp_table_add(connp->out_tx->response_headers, h->name, h) != HTP_OK) {
             bstr_free(h->name);

@@ -145,6 +145,8 @@ static unsigned char bestfit_1252[] = {
     0xff, 0x5d, 0x7d, 0xff, 0x5e, 0x7e, 0x00, 0x00, 0x00
 };
 
+#define HTP_HEADERS_LIMIT 1024
+
 htp_cfg_t *htp_config_create(void) {
     htp_cfg_t *cfg = calloc(1, sizeof (htp_cfg_t));
     if (cfg == NULL) return NULL;
@@ -163,6 +165,7 @@ htp_cfg_t *htp_config_create(void) {
     cfg->response_lzma_layer_limit = 1; // default is only one layer
     cfg->compression_bomb_limit = HTP_COMPRESSION_BOMB_LIMIT;
     cfg->compression_time_limit = HTP_COMPRESSION_TIME_LIMIT_USEC;
+    cfg->number_headers_limit = HTP_HEADERS_LIMIT;
     cfg->allow_space_uri = 0;
 
     // Default settings for URL-encoded data.
@@ -545,6 +548,11 @@ void htp_config_set_compression_time_limit(htp_cfg_t *cfg, size_t useclimit) {
     } else {
         cfg->compression_time_limit = (int32_t) useclimit;
     }
+}
+
+void htp_config_set_number_headers_limit(htp_cfg_t *cfg, uint32_t limit) {
+    if (cfg == NULL) return;
+    cfg->number_headers_limit = limit;
 }
 
 void htp_config_set_log_level(htp_cfg_t *cfg, enum htp_log_level_t log_level) {

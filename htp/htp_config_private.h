@@ -363,6 +363,9 @@ struct htp_cfg_t {
 
     /** Maximum number of transactions. */
     uint32_t max_tx;
+
+    /** Maximum number of headers. */
+    uint32_t number_headers_limit;
 };
 
 #ifdef	__cplusplus
