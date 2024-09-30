@@ -1,3 +1,22 @@
+0.5.49 (30 September 2024)
+--------------------------
+
+- headers: put a configurable limit on their numbers
+
+- htp/table: only fetch element when needed
+
+- workflows: add almalinux 8 and 9 jobs
+
+- workflows: remove centos 7 as it is EOL
+
+- fuzz: limits the number of transactions
+
+- fuzz: improve debug output
+
+- fuzz: flush to get full assertion text
+
+- request: trim headers values also when there is no name
+
 0.5.48 (22 April 2024)
 ----------------------
 
